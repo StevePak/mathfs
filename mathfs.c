@@ -1,13 +1,8 @@
-
-
 /*
-  FUSE: Filesystem in Userspace
-  Copyright (C) 2001-2007  Miklos Szeredi <miklos@szeredi.hu>
-
-  This program can be distributed under the terms of the GNU GPL.
-  See the file COPYING.
-
-  gcc -Wall hello.c `pkg-config fuse --cflags --libs` -o hello
+Team members -
+Steve Pak - 126008446
+Marvin Liu - 138008275
+Anthony Porturas - 
 */
 
 #define FUSE_USE_VERSION 26
@@ -33,16 +28,16 @@ struct builtin
 
 
 /*DOC FILE CONTENTS*/
-const char * add_doc = "Adds 2 numbers together.\nThe file add/a/b contains a added to b.";
-const char * sub_doc = "Subtracts 2 numbers.\nThe file sub/a/b contains b subtracted from a.";
-const char * mul_doc = "Multiplies 2 numbers together.\nThe file mul/a/b contains a multiplied to b.";
-const char * div_doc = "Divides 2 numbers.\nThe file div/a/b contains a divided by b.";
-const char * fib_doc = "Fibonacci Sequence.\nThe file fib/a contains the first a-th elements of the sequence.";
-const char * factor_doc = "Finds prime factors.\nThe file factor/a finds all prime factors of a.";
-const char * exp_doc = "Raises a number to an exponent.\nThe file exp/a/b contains a raised to b power.";
+const char * add_doc = "Adds 2 numbers together.\nThe file add/a/b contains a added to b.\n";
+const char * sub_doc = "Subtracts 2 numbers.\nThe file sub/a/b contains b subtracted from a.\n";
+const char * mul_doc = "Multiplies 2 numbers together.\nThe file mul/a/b contains a multiplied to b.\n";
+const char * div_doc = "Divides 2 numbers.\nThe file div/a/b contains a divided by b.\n";
+const char * fib_doc = "Fibonacci Sequence.\nThe file fib/a contains the first a-th elements of the sequence.\n";
+const char * factor_doc = "Finds prime factors.\nThe file factor/a finds all prime factors of a.\n";
+const char * exp_doc = "Raises a number to an exponent.\nThe file exp/a/b contains a raised to b power.\n";
 
 /**************** MATH FUNCTIONS**************/
-char* add(char* a, char* b) {
+char* add(char* a, char* b) {	/* function for adding numbers together */
 	double c = strtod(a, NULL);
 	double d = strtod(b, NULL);
 	
@@ -53,7 +48,7 @@ char* add(char* a, char* b) {
 	
 }
 
-char* sub(char* a, char* b) {
+char* sub(char* a, char* b) {	/* function for subtracting numbers together */
 	double c = strtod(a, NULL);
 	double d = strtod(b, NULL);
 	
@@ -61,9 +56,9 @@ char* sub(char* a, char* b) {
 	sprintf(buf, "%f\n", c - d);
 	
 	return buf;
-}
+}	
 
-char* mul(char* a, char* b) {
+char* mul(char* a, char* b) {	/* function for multiplying numbers together */
 	double c = strtod(a, NULL);
 	double d = strtod(b, NULL);
 	
@@ -73,19 +68,19 @@ char* mul(char* a, char* b) {
 	return buf;
 }
 
-char* div1(char* a, char* b) {
+char* div1(char* a, char* b) {	/* function for dividing numbers togeter */
 	double c = strtod(a, NULL);
 	double d = strtod(b, NULL);
 	
 	char buf[1024] = "";
 	if(d == 0)
-		return "ERROR: divide by zero";
+		return "ERROR: divide by zero\n";
 	sprintf(buf, "%f\n", c / d);
 	
 	return buf;
 }
 
-char* exp1(char* a, char* b) {
+char* exp1(char* a, char* b) {	/* function for raising a number to an exponent together */
 	double c = strtod(a, NULL);
 	double d = strtod(b, NULL);
 	
@@ -95,7 +90,7 @@ char* exp1(char* a, char* b) {
 	return buf;
 }
 
-char* fib(char* a, char* b) {
+char* fib(char* a, char* b) {	/* function for finding the fibonacci sequence numbers */
 	char buf[1024];
 	char str[1024];
 	strcpy(str, "1\n1\n");
@@ -118,11 +113,13 @@ char* fib(char* a, char* b) {
 	return str;
 }
 
-long long isPrime(int n){
+long long isPrime(long long n){	/* function for checking whether or not a number is prime */
 	int i;
 	int count = 0;
 	long long lim = (long long) ceil(sqrt((double) n));
-	for(i = 1; i < lim; i++)
+	if(n == 1)
+		return 0;
+	for(i = 1; i <= lim; i++)
 	{
 		if(n % i == 0)
 			count++;
@@ -132,18 +129,18 @@ long long isPrime(int n){
 	return 1;
 }
 
-char* factor(char* a, char* b) {
+char* factor(char* a, char* b) {	/* function to find the prime factors of a number*/
 	char buf[1024];
 	char str[1024];
 	strcpy(str, "");
 	long long i;
 	double limit = strtod(b, NULL);
 	if(fabs(limit - floor(limit)) > 0.001)
-		return "Must be an integer";
+		return "Must be an integer\n";
 	
 	long long n = (long long) limit;
 	
-	long long int_lim = (long long) ceil(sqrt(limit));
+	long long int_lim = n;
 	
 	
 		
@@ -151,12 +148,19 @@ char* factor(char* a, char* b) {
 	{
 		sprintf(buf, "%lld\n", n);
 		strcat(str, buf);
+		return str;
 	}
-	for(i = 2; i < int_lim; i++)
+	if(n % 2 == 0)
+	{
+		sprintf(buf, "%i\n", 2);
+		strcat(str, buf);
+	}
+	for(i = 3; i <= int_lim; i+=2)
 	{
 		if(isPrime(i) == 1)
 			if(n % i == 0)
 			{
+				int_lim = int_lim / i;
 				sprintf(buf, "%lld\n", i);
 				strcat(str, buf);
 			}
@@ -167,18 +171,18 @@ char* factor(char* a, char* b) {
 
 /*TABLE OF STRUCTS*/
 const struct builtin builtin[] = {
-	{"add", "Adds 2 numbers together.\nThe file add/a/b contains a added to b.", 3, add},
-	{"sub", "Subtracts 2 numbers.\nThe file sub/a/b contains b subtracted from a.", 3, sub},
-	{"mul", "Multiplies 2 numbers together.\nThe file mul/a/b contains a multiplied to b.", 3, mul},
-	{"div", "Divides 2 numbers.\nThe file div/a/b contains a divided by b.", 3, div1},
-	{"fib", "Fibonacci Sequence.\nThe file fib/a contains the first a-th elements of the sequence.", 2, fib},
-	{"exp", "Finds prime factors.\nThe file factor/a finds all prime factors of a.", 3, exp1},
-	{"factor", "Raises a number to an exponent.\nThe file exp/a/b contains a raised to b power.", 2, factor},
+	{"add", "Adds 2 numbers together.\nThe file add/a/b contains a added to b.\n", 3, add},
+	{"sub", "Subtracts 2 numbers.\nThe file sub/a/b contains b subtracted from a.\n", 3, sub},
+	{"mul", "Multiplies 2 numbers together.\nThe file mul/a/b contains a multiplied to b.\n", 3, mul},
+	{"div", "Divides 2 numbers.\nThe file div/a/b contains a divided by b.\n", 3, div1},
+	{"fib", "Fibonacci Sequence.\nThe file fib/a contains the first a-th elements of the sequence.\n", 2, fib},
+	{"factor", "Finds prime factors.\nThe file factor/a finds all prime factors of a.\n", 2, factor},
+	{"exp", "Raises a number to an exponent.\nThe file exp/a/b contains a raised to b power.\n", 3, exp1},
 	{0, 0, 0, 0}
 };
 
 /************** FUSE APIs****************/
-static int mathfs_getattr(const char *path, struct stat *stbuf)
+static int mathfs_getattr(const char *path, struct stat *stbuf)	/* function to get attributes of a file */
 {
 	int res = 0;
 	char path2[40];
@@ -242,7 +246,7 @@ static int mathfs_getattr(const char *path, struct stat *stbuf)
 }
 
 static int mathfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
-			 off_t offset, struct fuse_file_info *fi)
+			 off_t offset, struct fuse_file_info *fi)	/* read directory contents */
 {
 	(void) offset;
 	(void) fi;
@@ -300,7 +304,7 @@ static int mathfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 
 
 
-static int mathfs_open(const char *path, struct fuse_file_info *fi)
+static int mathfs_open(const char *path, struct fuse_file_info *fi)	/* checks whatever user is permitted to open the file */
 {
 	char path2[40];
 	char *path_split[1024];
@@ -338,18 +342,12 @@ static int mathfs_open(const char *path, struct fuse_file_info *fi)
 	
 	if(builtin[j].name == 0)
 		return -ENOENT;
-/*
-	if (strcmp(path, hello_path) != 0)
-		return -ENOENT;
 
-	if ((fi->flags & 3) != O_RDONLY)
-		return -EACCES;
-*/
 	return 0;
 }
 
 static int mathfs_read(const char *path, char *buf, size_t size, off_t offset,
-		      struct fuse_file_info *fi)
+		      struct fuse_file_info *fi)	/* reads the contents of the file */
 {
 	size_t len;
 	(void) fi;
@@ -410,7 +408,7 @@ static int mathfs_read(const char *path, char *buf, size_t size, off_t offset,
 
 
 
-static struct fuse_operations hello_oper = {
+static struct fuse_operations hello_oper = {	/* struct of functions */
 	.getattr	= mathfs_getattr,
 	.readdir	= mathfs_readdir,
 	.open		= mathfs_open,
@@ -420,7 +418,7 @@ static struct fuse_operations hello_oper = {
 
 
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[])	/* main */
 {
 	
 	return fuse_main(argc, argv, &hello_oper, NULL);
