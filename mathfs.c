@@ -1,8 +1,8 @@
 /*
 Team members -
-Steve Pak - 126008446
-Marvin Liu - 138008275
-Anthony Porturas - 
+Steve Pak
+Marvin Liu
+Anthony Porturas
 */
 
 #define FUSE_USE_VERSION 26
